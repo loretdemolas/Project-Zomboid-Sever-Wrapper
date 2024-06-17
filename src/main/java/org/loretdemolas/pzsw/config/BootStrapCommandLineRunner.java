@@ -7,6 +7,7 @@ import org.loretdemolas.pzsw.repository.RoleRepository;
 import org.loretdemolas.pzsw.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -17,10 +18,12 @@ import java.util.Set;
 public class BootStrapCommandLineRunner implements CommandLineRunner {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
     @Autowired
-    public BootStrapCommandLineRunner(UserRepository userRepository, RoleRepository roleRepository){
+    public BootStrapCommandLineRunner(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
     @Override
     public void run(String... args) throws Exception {
@@ -44,7 +47,9 @@ public class BootStrapCommandLineRunner implements CommandLineRunner {
 
         Optional<User> firstUser = userRepository.findByUsername("loretdemolas");
         if (firstUser.isEmpty()) {
-            User user = new User("loretdemolas", "Seba5054", roles);
+            String rawPassword = "Seba5054";
+            String encodedPassword = passwordEncoder.encode(rawPassword);
+            User user = new User("loretdemolas", encodedPassword, roles);
             userRepository.save(user);
         }
     }

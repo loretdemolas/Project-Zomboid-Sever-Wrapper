@@ -43,7 +43,7 @@ public class SecurityConfiguration {
                         authorizationManagerRequestMatcherRegistry.requestMatchers(HttpMethod.DELETE).hasRole("ADMIN")
                                 .requestMatchers("/admin/**").hasAnyRole("ADMIN")
                                 .requestMatchers("/member/**").hasAnyRole("MEMBER", "ADMIN")
-                                .requestMatchers("/login/**").permitAll()
+                                .requestMatchers("/auth/login/**").permitAll()
                                 .requestMatchers("/h2-console/**").permitAll()
                                 .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
