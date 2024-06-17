@@ -30,7 +30,7 @@ public class User implements UserDetails{
     private String password;
 
     @Column(name = "enabled", nullable = false)
-    private boolean enabled;
+    private boolean enabled = true;
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
@@ -48,7 +48,17 @@ public class User implements UserDetails{
     )
     private Set<Role> roles;
 
-    // Getters and setters
+    public User(){
+
+    }
+
+    public User(String username, String password, Set<Role> roles) {
+        this.username=username;
+        this.password=password;
+        this.roles=roles;
+    }
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

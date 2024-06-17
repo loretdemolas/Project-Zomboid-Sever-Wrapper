@@ -17,16 +17,16 @@ public class Role implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false, unique = true)
-    private String name;
+    private RoleName name;
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
-    // Getters and setters
 
     @Override
     public String getAuthority() {
-        return name;
+        return name.name();
     }
 }

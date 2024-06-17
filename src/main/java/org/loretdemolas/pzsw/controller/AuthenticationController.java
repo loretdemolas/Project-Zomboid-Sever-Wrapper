@@ -22,7 +22,7 @@ public class AuthenticationController {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
     }
-
+/*
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> authenticate(@RequestBody LoginUserDTO loginUserDto) {
         User authenticatedUser = authenticationService.authenticate(loginUserDto);
@@ -35,5 +35,5 @@ public class AuthenticationController {
         loginResponse.setExpiresIn(jwtExpire);
 
         return ResponseEntity.ok(loginResponse);
-    }
+    }*/
 }
