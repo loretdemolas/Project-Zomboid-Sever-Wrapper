@@ -2,13 +2,17 @@ package org.loretdemolas.pzsw.exception;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.io.IOException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -52,5 +56,39 @@ public class GlobalExceptionHandler {
         }
 
         return errorDetail;
+    }
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<ProblemDetail> handleIOException(IOException exception) {
+        ProblemDetail errorDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,  exception.getMessage());
+        errorDetail.setProperty("description", "IO exception occurred while executing Docker operation.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetail);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ProblemDetail> handleRuntimeException(RuntimeException exception) {
+        ProblemDetail errorDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
+        errorDetail.setProperty("description", "Runtime exception occurred while executing Docker operation.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetail);
+    }
+
+    @ExceptionHandler(InterruptedException.class)
+    public ResponseEntity<ProblemDetail> handleInterruptedException(InterruptedException exception) {
+        ProblemDetail errorDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,  exception.getMessage());
+        errorDetail.setProperty("description", "Execution interrupted while executing Docker operation.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetail);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ProblemDetail> handleIllegalArgumentException(IllegalArgumentException exception) {
+        ProblemDetail errorDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,  exception.getMessage());
+        errorDetail.setProperty("description", "Invalid argument provided for Docker operation.");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDetail);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ProblemDetail> handleGeneralException(Exception exception) {
+        ProblemDetail errorDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,  exception.getMessage());
+        errorDetail.setProperty("description", "Unknown internal server error occurred.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetail);
     }
 }

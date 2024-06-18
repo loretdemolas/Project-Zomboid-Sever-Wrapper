@@ -1,0 +1,63 @@
+version: '3.8'
+services:
+  zomboid-dedicated-server:
+    user: "1000:1000"
+    build:
+      context: .
+      dockerfile: docker/zomboid-dedicated-server.Dockerfile
+      args:
+        - "UID=${UID:-1000}"
+        - "GID=${GID:-1000}"
+    image: "ghcr.io/loretdemolas/pz-server"
+    container_name: zomboid-dedicated-server
+    restart: unless-stopped
+  zomboid-dedicated-server:
+    image: ghcr.io/loretdemolas/pz-server:master
+    container_name: zomboid-dedicated-server
+    restart: unless-stopped
+    user: null
+    build:
+      context: null
+      dockerfile: null
+    environment:
+      - PAUSE_ON_EMPTY=false
+      - DEFAULT_PORT=16261
+      - GAME_VERSION=public
+      - USE_STEAM=false
+      - RESETID=reset123
+      - TZ=UTC
+      - MOD_NAMES=
+      - MAX_RAM=8000m
+      - GC_CONFIG=ZGC
+      - PUBLIC_SERVER=false
+      - RCON_PORT=27015
+      - UDP_PORT=16262
+      - BIND_IP=0.0.0.0
+      - MAX_PLAYERS=10
+      - ADMIN_PASSWORD=password
+      - RCON_PASSWORD=rconpassword
+      - MOD_WORKSHOP_IDS=
+      - AUTOSAVE_INTERVAL=5
+      - SERVER_PASSWORD=null
+      - SERVER_NAME=servertest
+      - STEAM_VAC=false
+      - ADMIN_USERNAME=admin
+      - MAP_NAMES=Muldraugh, KY
+    ports:
+      - 16261:16261/udp
+      - 27015:27015/tcp
+    volumes:
+      - null
+      - null
+      - null
+      - null
+
+volumes:
+  ZomboidDedicatedServer:
+    external: true
+  ZomboidConfig:
+    external: true
+  steamCMD:
+    external: true
+  steam:
+    external: true
